@@ -17,6 +17,9 @@ bin/
 dist/
 release/
 node_modules/
+db/
+build/
+cert/
 
 # Ignore compiled binaries
 main
