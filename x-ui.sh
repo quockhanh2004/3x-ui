@@ -289,7 +289,7 @@ start() {
         LOGI "Panel is running, No need to start again, If you need to restart, please select restart"
     else
         systemctl start x-ui
-        sleep 2
+        sleep 10
         check_status
         if [[ $? == 0 ]]; then
             LOGI "x-ui Started Successfully"
@@ -310,7 +310,7 @@ stop() {
         LOGI "Panel stopped, No need to stop again!"
     else
         systemctl stop x-ui
-        sleep 2
+        sleep 10
         check_status
         if [[ $? == 1 ]]; then
             LOGI "x-ui and xray stopped successfully"
@@ -326,7 +326,7 @@ stop() {
 
 restart() {
     systemctl restart x-ui
-    sleep 2
+    sleep 10
     check_status
     if [[ $? == 0 ]]; then
         LOGI "x-ui and xray Restarted successfully"
