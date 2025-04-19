@@ -2,28 +2,24 @@ FROM ubuntu:22.04
 
 ENV TZ=Asia/Ho_Chi_Minh
 
-# Cập nhật hệ thống & cài gói cần thiết
-RUN apt update && \
-    apt install -y \
+# Dùng BuildKit hoặc apt-get chuẩn không cảnh báo
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu/|http://opensource.xtdv.net/ubuntu/|g' /etc/apt/sources.list && \
+    sed -i 's|http://security.ubuntu.com/ubuntu/|http://opensource.xtdv.net/ubuntu/|g' /etc/apt/sources.list && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
     wget curl tar tzdata ca-certificates bash iproute2 \
-    systemctl net-tools sudo gpg lsb-release gnupg \
-    fail2ban && \
+    net-tools systemctl sudo gpg lsb-release gnupg fail2ban && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone && \
-    apt autoremove
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Tạo thư mục làm việc
 WORKDIR /app
 
-# Copy script cài đặt
 COPY install.sh ./install.sh
 
-# Đặt quyền thực thi và chạy cài đặt
 RUN chmod +x ./install.sh && ./install.sh
 
-# Dùng volume để giữ cấu hình
 VOLUME ["/etc/x-ui"]
 
-# Khởi động container
-CMD ["bash", "-c", "x-ui start && bash"]
-
+CMD ["bash", "-c", "x-ui start && tail -f /dev/null"]
